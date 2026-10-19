@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guilherme Luz · Portfólio 3D</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#14121f;--glass:rgba(20,18,32,.62);--ink:#f4efe6;--acc:#ffb95e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0b16}}
+:root[data-theme="dark"]{--bg:#0d0b16}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:radial-gradient(circle at 50% 40%,#2a2540,var(--bg));color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none}
+.stage{position:absolute;inset:0;perspective:800px;perspective-origin:50% 50%;cursor:grab;touch-action:none}
+.stage:active{cursor:grabbing}
+.world,.box{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.world{transition:transform 1.6s cubic-bezier(.65,0,.25,1)}
+.world.drag{transition:none}
+.wall{position:absolute;left:50%;top:50%;overflow:hidden;backface-visibility:hidden}
+.wall::after{content:"";position:absolute;inset:0;background:#0a1030;opacity:0;transition:opacity 1s;pointer-events:none;z-index:1}
+.night .wall::after{opacity:.55}
+.glow{z-index:2}
+.face{position:absolute;left:50%;top:50%;backface-visibility:hidden;transition:filter 1s}
+.night .face:not(.glow){filter:brightness(.45)}
+.wallpaper{background:linear-gradient(#e9dcc8,#dccbb0)}
+.base{position:absolute;left:0;right:0;bottom:0;height:34px;background:#fbf7ef;border-top:4px solid #cbb99d}
+/* window */
+.win{position:absolute;left:320px;top:110px;width:360px;height:300px;border:14px solid #8a5a34;border-radius:6px;box-shadow:0 0 0 4px #6d4527,inset 0 0 20px rgba(0,0,0,.3);overflow:hidden;z-index:2}
+.sky{position:absolute;inset:0;transition:opacity 1.2s}
+.day{background:linear-gradient(#5db4ff,#bfe6ff 70%,#8fd18a 70%,#6bb86a)}
+.sun{position:absolute;right:50px;top:36px;width:56px;height:56px;border-radius:50%;background:#fff3a0;box-shadow:0 0 40px 18px #ffe98066}
+.cloud{position:absolute;left:40px;top:70px;width:90px;height:26px;background:#fff;border-radius:20px;box-shadow:30px -12px 0 6px #fff;opacity:.9;animation:drift 18s linear infinite alternate}
+@keyframes drift{to{transform:translateX(120px)}}
+.nightsky{background:radial-gradient(circle at 25% 30%,#fff 0 1px,transparent 2px),radial-gradient(circle at 70% 20%,#fff 0 1px,transparent 2px),radial-gradient(circle at 50% 55%,#fff 0 1px,transparent 2px),radial-gradient(circle at 85% 60%,#fff 0 1px,transparent 2px),radial-gradient(circle at 12% 65%,#fff 0 1px,transparent 2px),linear-gradient(#050818,#1b2250 70%,#10241f 70%);opacity:0}
+.night .nightsky{opacity:1}.night .day{opacity:0}
+.moon{position:absolute;right:60px;top:40px;width:44px;height:44px;border-radius:50%;box-shadow:inset -12px 0 0 0 #f5f1d8;transform:rotate(-20deg)}
+.bar-v,.bar-h{position:absolute;background:#8a5a34}
+.bar-v{left:50%;top:0;bottom:0;width:10px;margin-left:-5px}.bar-h{top:50%;left:0;right:0;height:10px;margin-top:-5px}
+.curtain{position:absolute;top:80px;width:110px;height:380px;background:repeating-linear-gradient(90deg,#b8514a 0 14px,#a34540 14px 24px);z-index:3;border-radius:0 0 30px 30px}
+.rod{position:absolute;left:250px;top:90px;width:500px;height:8px;background:#5a3a22;border-radius:4px;z-index:3}
+.poster{position:absolute;border:8px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.door{position:absolute;left:90px;bottom:0;width:230px;height:470px;background:linear-gradient(90deg,#7b4a2a,#8d5a36);border:10px solid #5d3720;border-bottom:0;box-shadow:inset 0 0 0 18px #7b4a2a,inset 0 0 0 20px #5d3720}
+.door::after{content:"";position:absolute;right:26px;top:230px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2b0,#c9972e)}
+.shelf{position:absolute;left:480px;width:380px;height:16px;background:#6d4527;box-shadow:0 8px 12px rgba(0,0,0,.3)}
+.books{position:absolute;left:480px;width:380px;height:90px;display:flex;align-items:flex-end;gap:3px;padding:0 10px}
+.books i{display:block;width:26px;border-radius:2px 2px 0 0}
+.clock{position:absolute;left:760px;top:70px;width:110px;height:110px;border-radius:50%;background:#fffdf6;border:7px solid #3a2a20;box-shadow:0 6px 14px rgba(0,0,0,.35)}
+.clock i{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;background:#2a1f1a;border-radius:3px}
+.cork{position:absolute;left:90px;top:110px;width:260px;height:170px;background:#c8a06a;border:10px solid #7b5230;box-shadow:inset 0 0 20px rgba(0,0,0,.25),0 6px 12px rgba(0,0,0,.3)}
+.cork b{position:absolute;width:54px;height:66px;background:#fff;box-shadow:2px 3px 5px rgba(0,0,0,.3)}
+/* floor */
+.floorbg{background:repeating-linear-gradient(90deg,#b98a5a 0 120px,#aa7c4d 120px 124px,#c2956a 124px 250px,#aa7c4d 250px 254px)}
+.rug{position:absolute;left:260px;top:260px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,#e66a5c 0 22%,#f4d9a8 22% 30%,#4d8f99 30% 56%,#f4d9a8 56% 62%,#e66a5c 62%);box-shadow:0 0 0 6px #c75a4d;opacity:.95}
+.lampglow{position:absolute;left:760px;top:470px;width:420px;height:420px;margin:-210px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,110,.75),transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1s;z-index:2}
+.night .lampglow{opacity:1}
+.ceil{background:#f6f1e7}
+.ceillight{position:absolute;left:50%;top:50%;width:140px;height:140px;margin:-70px;border-radius:50%;background:radial-gradient(circle,#fffbe6,#fff3c4 40%,transparent 70%);z-index:2;opacity:.9;transition:opacity 1s}
+.night .ceillight{opacity:.15}
+/* screen */
+.screen{width:100%;height:100%;background:#0c1220;padding:7px;font:7px/1.5 ui-monospace,monospace;color:#7ef0a8;overflow:hidden}
+.screen p{white-space:nowrap;overflow:hidden;width:0;animation:type 3s steps(26) infinite}
+.screen p:nth-child(2){animation-delay:.6s;color:#ffd479}.screen p:nth-child(3){animation-delay:1.2s;color:#8ab4ff}.screen p:nth-child(4){animation-delay:1.8s}
+@keyframes type{0%{width:0}60%,100%{width:100%}}
+/* HUD */
+.hud{position:absolute;z-index:10;pointer-events:none}
+.top{left:18px;top:calc(14px + env(safe-area-inset-top,0px))}
+.top h1{font-size:18px;letter-spacing:.04em;font-weight:650}
+.top p{font-size:12px;opacity:.7;margin-top:2px}
+.cap{left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));text-align:center;max-width:90vw;background:var(--glass);backdrop-filter:blur(10px);padding:10px 18px;border-radius:14px;transition:opacity .4s}
+.cap b{display:block;font-size:15px;color:var(--acc)}.cap span{font-size:12.5px;opacity:.85}
+.nav{left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;flex-wrap:wrap;justify-content:center;pointer-events:auto;background:var(--glass);backdrop-filter:blur(10px);padding:7px;border-radius:999px;max-width:96vw}
+button{font:inherit;font-size:13px;color:var(--ink);background:transparent;border:0;padding:8px 14px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+button:hover{background:rgba(255,255,255,.14)}button.on{background:var(--acc);color:#2a1a08;font-weight:600}
+.tog{right:18px;top:calc(14px + env(safe-area-inset-top,0px));pointer-events:auto;background:var(--glass);backdrop-filter:blur(10px)}
+.door,.shelf,.books{display:none}
+.cap{width:min(560px,94vw);max-height:38vh;overflow:auto;text-align:left;pointer-events:auto}
+.cap h2{font-size:17px;color:var(--acc);margin-bottom:6px}.cap h3{font-size:13.5px;margin:10px 0 2px}.cap h3 small{opacity:.65;font-weight:400}
+.cap ul{padding-left:18px;font-size:12.5px;line-height:1.55;opacity:.92}.cap p{font-size:12.5px;line-height:1.55;opacity:.92}.cap a{color:var(--acc)}
+@media(min-width:900px){.cap{left:auto;right:24px;transform:none;bottom:auto;top:90px;width:370px;max-height:calc(100vh - 200px)}}
+.tv{width:100%;height:100%;background:linear-gradient(135deg,#1d1440,#0e2b4a);padding:12px;color:#fff;font:600 12px system-ui,sans-serif;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.tv h4{width:100%;font-size:13px;color:#ffb95e;letter-spacing:.1em}.tv span{background:rgba(255,255,255,.16);padding:3px 9px;border-radius:99px}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"><div class="world" id="world"></div></div>
+<div class="hud top"><h1>Guilherme Luz</h1><p>Portfólio em 3D · arraste, use ← → ou os botões</p></div>
+<div class="hud tog"><button id="tog" style="pointer-events:auto">🌙 Noite</button></div>
+<div class="hud cap" id="cap"><b></b><span></span></div>
+<div class="hud nav" id="nav"></div>
+<script>
+const world=document.getElementById('world'),stage=document.getElementById('stage');
+const $=(h)=>{const t=document.createElement('div');t.innerHTML=h.trim();return t.firstChild};
+function plane(cls,w,h,tr,html){const e=$(`<div class="wall ${cls}" style="width:${w}px;height:${h}px;margin:${-h/2}px 0 0 ${-w/2}px;transform:${tr}">${html||''}</div>`);world.appendChild(e);return e}
+const W=1000,H=600,D=500;
+// walls
+plane('wallpaper',W,H,`translateZ(${-D}px)`,`
+ <div class="rod"></div><div class="curtain" style="left:240px"></div><div class="curtain" style="left:650px"></div>
+ <div class="win"><div class="sky day"><div class="sun"></div><div class="cloud"></div></div><div class="sky nightsky"><div class="moon"></div></div><div class="bar-v"></div><div class="bar-h"></div></div>
+ <div class="poster" style="left:60px;top:150px;width:130px;height:180px;background:linear-gradient(135deg,#ff7a59,#ffd166 50%,#4ecdc4)"></div>
+ <div class="poster" style="left:810px;top:170px;width:120px;height:150px;background:linear-gradient(#1b1f4b,#6a4c93 60%,#f4a261)"></div>
+ <div class="base"></div>`);
+plane('wallpaper',W,H,`translateZ(${D}px) rotateY(180deg)`,`
+ <div class="cork"><b style="left:20px;top:18px;transform:rotate(-6deg);background:#ffd1d1"></b><b style="left:95px;top:30px;transform:rotate(4deg);background:#d1ecff"></b><b style="left:165px;top:16px;transform:rotate(-3deg);background:#fff2a8"></b></div>
+ <div class="clock"><i id="hh" style="width:5px;height:30px;margin-left:-2px"></i><i id="mm" style="width:3px;height:42px;margin-left:-1px"></i><i id="ss" style="width:2px;height:46px;margin-left:-1px;background:#d33"></i></div>
+ <div class="base"></div>`);
+plane('wallpaper',W,H,`translateX(${-D}px) rotateY(90deg)`,`
+ <div class="door"></div>
+ <div class="shelf" style="top:200px"></div><div class="books" style="top:110px">${[60,80,70,90,64,84,72,78,66,88,70].map((h,i)=>`<i style="height:${h}px;background:hsl(${i*37+10} 55% 52%)"></i>`).join('')}</div>
+ <div class="shelf" style="top:340px"></div><div class="books" style="top:250px">${[70,56,86,64,78,90,60,74].map((h,i)=>`<i style="height:${h}px;background:hsl(${i*47+200} 50% 48%)"></i>`).join('')}</div>
+ <div class="base"></div>`);
+plane('wallpaper',W,H,`translateX(${D}px) rotateY(-90deg)`,`
+ <div class="poster" style="left:380px;top:90px;width:240px;height:160px;background:linear-gradient(#78c6ff,#ffe3a3 60%,#3a7d44 60%)"></div>
+ <div class="base"></div>`);
+plane('floorbg',W,W,`translateY(${H/2}px) rotateX(90deg)`,`<div class="rug"></div><div class="lampglow"></div>`);
+plane('ceil',W,W,`translateY(${-H/2}px) rotateX(-90deg)`,`<div class="ceillight"></div>`);
+// 3D boxes
+const shade={f:'rgba(0,0,0,0)',b:'rgba(0,0,0,.28)',r:'rgba(0,0,0,.14)',l:'rgba(0,0,0,.22)',t:'rgba(255,255,255,.14)',u:'rgba(0,0,0,.4)'};
+function box(o){
+ const e=$(`<div class="box" style="transform:translate3d(${o.x}px,${o.y}px,${o.z}px) rotateY(${o.ry||0}deg)"></div>`);
+ [['f',o.w,o.h,`translateZ(${o.d/2}px)`],['b',o.w,o.h,`rotateY(180deg) translateZ(${o.d/2}px)`],['r',o.d,o.h,`rotateY(90deg) translateZ(${o.w/2}px)`],['l',o.d,o.h,`rotateY(-90deg) translateZ(${o.w/2}px)`],['t',o.w,o.d,`rotateX(90deg) translateZ(${o.h/2}px)`],['u',o.w,o.d,`rotateX(-90deg) translateZ(${o.h/2}px)`]].forEach(([k,w,h,tr])=>{
+  const f=$(`<div class="face ${o.glow?'glow':''}" style="width:${w}px;height:${h}px;margin:${-h/2}px 0 0 ${-w/2}px;transform:${tr};background:linear-gradient(${shade[k]},${shade[k]}),${o.c};${o.round?'border-radius:'+o.round+'px':''}">${k==='f'&&o.front?o.front:''}</div>`);
+  e.appendChild(f)});
+ world.appendChild(e);return e}
+const FY=H/2; // floor y
+const on=(h)=>FY-h/2; // center y for box resting on floor
+// bed (head against right wall)
+box({w:370,h:50,d:250,x:310,y:on(50),z:-110,c:'#6b4428'});
+box({w:30,h:150,d:250,x:485,y:on(150),z:-110,c:'#5a3820'});
+box({w:350,h:36,d:236,x:305,y:FY-50-18,z:-110,c:'#f2efe9'});
+box({w:250,h:14,d:240,x:360,y:FY-86-7,z:-110,c:'#7b4bbf'});
+box({w:80,h:22,d:100,x:440,y:FY-86-11,z:-175,c:'#fffaf0',round:10});
+box({w:80,h:22,d:100,x:440,y:FY-86-11,z:-45,c:'#fffaf0',round:10});
+// nightstand + lamp
+box({w:80,h:90,d:90,x:455,y:on(90),z:95,c:'#7c4e2e'});
+box({w:16,h:36,d:16,x:455,y:FY-90-18,z:95,c:'#444'});
+box({w:44,h:36,d:44,x:455,y:FY-126-18,z:95,c:'#ffe3a0',glow:true});
+// desk (against front wall z=+500)
+box({w:340,h:12,d:140,x:-120,y:FY-150,z:425,c:'#a8754a'});
+[[-270,355],[30,355],[-270,495],[30,495]].forEach(([x,z])=>box({w:12,h:150,d:12,x,y:on(150),z:z-70+0,c:'#6d4527'}));
+box({w:130,h:84,d:8,x:-120,y:FY-162-42,z:450,ry:180,c:'#1a1a1f',front:'<div class="screen"><p>$ whoami</p><p>guilherme.luz</p><p>estudante_ADS = true</p><p>// aberto a estágio</p></div>',glow:true});
+box({w:20,h:30,d:20,x:-120,y:FY-162-15,z:450,c:'#2a2a30'});
+box({w:150,h:6,d:50,x:-120,y:FY-162-3,z:390,c:'#2c2f3a'});
+box({w:30,h:34,d:30,x:-250,y:FY-162-17,z:440,c:'#e8e2d4',round:6});
+// chair
+box({w:80,h:12,d:80,x:-120,y:FY-95,z:300,c:'#2f6f73'});
+box({w:80,h:90,d:10,x:-120,y:FY-95-45,z:262,c:'#2f6f73'});
+box({w:12,h:84,d:12,x:-120,y:on(84),z:300,c:'#333'});
+box({w:60,h:6,d:60,x:-120,y:on(6),z:300,c:'#333'});
+// plant
+box({w:50,h:60,d:50,x:-440,y:on(60),z:-440,c:'#c4623f'});
+[[0,-100,60],[18,-130,50],[-18,-120,46]].forEach(([dx,dy,s])=>box({w:s,h:s,d:s,x:-440+dx,y:FY-60+dy+30,z:-440,c:'#3f9a52',round:4}));
+// wardrobe-ish chest under the shelf
+box({w:90,h:60,d:300,x:-445,y:on(60),z:0,c:'#6d4527'});
+box({w:260,h:150,d:10,x:-470,y:FY-60-75,z:0,ry:90,c:'#101114',glow:true,front:'<div class="tv"><h4>HABILIDADES</h4><span>Python</span><span>JavaScript</span><span>C++</span><span>PHP</span><span>HTML5</span><span>CSS3</span><span>Flask</span><span>SQLite</span><span>Git</span><span>GitHub</span><span>VS Code</span></div>'});
+// views
+const views=[
+ {n:'Experiências',ry:0,rx:2,z:140,t:'A janela',d:'Alterne entre dia e noite no botão no topo.'},
+ {n:'Hobbies',ry:90,rx:10,z:170,t:'A cama',d:'Colcha azul, dois travesseiros e um abajur na mesinha.'},
+ {n:'Sobre mim',ry:180,rx:4,z:150,t:'A mesa de estudos',d:'Monitor ligado, teclado, caneca e um relógio que mostra a hora real.'},
+ {n:'Habilidades',ry:270,rx:3,z:150,t:'Porta e estante',d:'Livros coloridos, uma porta de madeira e o baú no canto.'},
+ {n:'Início',ry:-38,rx:-30,z:-760,t:'Visão geral',d:'Vista de fora: as paredes mais próximas ficam transparentes.'}];
+let cur={ry:0,rx:2,z:140},idx=0;
+const sc=()=>Math.min(1,innerWidth/1150,innerHeight/760+.25);
+function apply(){world.style.transform=`scale(${sc()}) translateZ(${cur.z}px) rotateX(${cur.rx}deg) rotateY(${cur.ry}deg)`}
+const INFO=[
+`<h2>Experiências</h2><h3>Vendedor — Kopenhagen <small>Aeroporto de Viracopos · Nov/2024 – Atual</small></h3><ul><li>Atendimento ao cliente em ambiente de alto fluxo</li><li>Organização e controle de estoque</li><li>Registro de vendas e indicadores</li><li>Trabalho com metas e resultados</li></ul><h3>Jovem Aprendiz — Samsung Eletrônica / Amazonia LTDA <small>Abr/2022 – Ago/2023</small></h3><ul><li>Organização documental e apoio administrativo</li><li>Digitalização e arquivamento</li><li>Elaboração de planilhas e relatórios</li></ul>`,
+`<h2>Hobbies</h2><ul><li>Entender como os computadores funcionam: hardware, imagens, cores e sons</li><li>Projetos pessoais: StockFlow (controle de estoque) e um agente de IA para o ENEM</li><li>Estudar programação com cursos e praticar no GitHub</li></ul>`,
+`<h2>Sobre mim</h2><p>Estudante de Análise e Desenvolvimento de Sistemas na UNIMETROCAMP Wyden, com conhecimentos em Python, JavaScript, HTML5, CSS3 e Flask. Experiência em atendimento, estoque e rotinas administrativas. Perfil organizado, proativo e orientado a resultados.</p><h3>Contato</h3><ul><li>Campinas – SP</li><li><a href="mailto:guilherme3luz@outlook.com">guilherme3luz@outlook.com</a></li><li>19-99283-5421</li><li><a href="https://github.com/Devsantosz" target="_blank" rel="noopener">github.com/Devsantosz</a></li></ul>`,
+`<h2>Habilidades</h2><ul><li><b>Linguagens:</b> Python, JavaScript, C++, PHP</li><li><b>Front-end:</b> HTML5, CSS3</li><li><b>Back-end:</b> Flask</li><li><b>Banco de dados:</b> SQLite</li><li><b>Ferramentas:</b> Git, GitHub, VS Code</li><li><b>Idiomas:</b> Português (nativo), Inglês básico (leitura técnica)</li></ul>`,
+`<h2>Guilherme Luz</h2><p><b>Objetivo:</b> estágio ou posição júnior em Desenvolvimento Web / Programação.</p><h3>Formação <small>ADS · UNIMETROCAMP Wyden · Ago/2026 – Dez/2028 (previsão)</small></h3><ul><li>Ensino Médio completo — E.E. Professor Luiz Gonzaga da Costa (2023)</li></ul><h3>Cursos</h3><ul><li>Curso em Vídeo: Algoritmos e Lógica (40h), HTML5 e CSS3 (200h), JavaScript (40h), Git e GitHub (20h)</li><li>Fundação Bradesco: Python (53h)</li></ul><p>Use os botões abaixo para explorar o quarto.</p>`];
+const nav=document.getElementById('nav'),cap=document.getElementById('cap');
+views.forEach((v,i)=>{const b=document.createElement('button');b.textContent=v.n;b.onclick=()=>go(i);nav.appendChild(b)});
+function go(i){
+ idx=(i+views.length)%views.length;const v=views[idx];
+ world.classList.remove('drag');
+ const k=360*Math.round((cur.ry-v.ry)/360);
+ cur={ry:v.ry+k,rx:v.rx,z:v.z};apply();
+ [...nav.children].forEach((b,j)=>b.classList.toggle('on',j===idx));
+ cap.style.opacity=0;setTimeout(()=>{cap.innerHTML=INFO[idx];cap.scrollTop=0;cap.style.opacity=1},500)}
+addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(idx===4?0:(idx+1)%4);if(e.key==='ArrowLeft')go(idx===4?3:(idx+3)%4);if(e.key==='ArrowUp')go(4);if(e.key==='ArrowDown')go(0)});
+// drag
+let dr=null;
+stage.addEventListener('pointerdown',e=>{dr={x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);world.classList.add('drag')});
+stage.addEventListener('pointermove',e=>{if(!dr)return;cur.ry-=(e.clientX-dr.x)*.25;cur.rx=Math.max(-40,Math.min(40,cur.rx+(e.clientY-dr.y)*.2));dr={x:e.clientX,y:e.clientY};apply()});
+const end=()=>{dr=null};stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
+stage.addEventListener('wheel',e=>{world.classList.add('drag');cur.z=Math.max(-900,Math.min(330,cur.z-e.deltaY*.4));apply()},{passive:true});
+addEventListener('resize',apply);
+// day/night
+const tog=document.getElementById('tog');
+tog.onclick=()=>{const n=document.body.classList.toggle('night');tog.textContent=n?'☀️ Dia':'🌙 Noite'};
+// clock
+function tick(){const d=new Date(),s=d.getSeconds(),m=d.getMinutes()+s/60,h=(d.getHours()%12)+m/60;
+ ss.style.transform=`rotate(${s*6}deg)`;mm.style.transform=`rotate(${m*6}deg)`;hh.style.transform=`rotate(${h*30}deg)`}
+tick();setInterval(tick,1000);
+// intro: start overview and fly in
+cur={ry:-38,rx:-30,z:-760};apply();
+setTimeout(()=>go(0),400);
+</script>
+</body>
+</html>
