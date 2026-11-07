@@ -1,32 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <link rel="stylesheet" href="./style/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="src/style/style.css">
+<title>Guilherme Luz · Portfólio 3D</title>
+<link rel="stylesheet" href="styles.css">
 
-  <title>Portfólio</title>
 </head>
-
 <body>
 
-  <header class="menu">
-
-    <button class="toggle">☰</button>
-
-    <div class="links">
-      <a href="#work">Trabalhos</a>
-      <a href="#about">Sobre</a>
-      <a href="#contact">Contacto </a>
-    </div>
-
-  </header>
-
-  <nav class="home">
-  </nav>
-
-  <script src="scripts/script.js"></script>
+<div class="stage" id="stage"><div class="world" id="world"></div></div>
+<div class="hud top"><h1>Devsantosz - Guilherme Luz</h1><p>Portfólio em 3D · arraste, use ← → ou os botões</p></div>
+<div class="hud tog"><button id="tog" style="pointer-events:auto">🌙 Noite</button></div>
+<div class="hud cap" id="cap"><b></b><span></span></div>
+<div class="hud nav" id="nav"></div>
+<script src="src/scripts/scripts.js"></script>
 
 </body>
 </html>
+
