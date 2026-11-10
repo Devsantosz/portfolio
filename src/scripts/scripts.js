@@ -158,6 +158,7 @@ views.forEach((v, i)=> {
   const b=document.createElement('button'); b.textContent=v.n; b.onclick=()=>go(i); nav.appendChild(b)
 });
 function go(i) {
+  setMenu(false);
   idx=(i+views.length)%views.length;
   const v=views[idx];
   world.classList.remove('drag');
@@ -167,9 +168,9 @@ function go(i) {
   };
   apply();
   [...nav.children].forEach((b, j)=>b.classList.toggle('on', j===idx));
-  cap.style.opacity=0;
+  setInfo(false);
   setTimeout(()=> {
-    cap.innerHTML=INFO[idx]; cap.scrollTop=0; cap.style.opacity=1
+    cap.innerHTML=INFO[idx]; cap.scrollTop=0
   }, 500)
 }
 addEventListener('keydown', e=> {
@@ -219,3 +220,16 @@ cur= {
 };
 apply();
 setTimeout(()=>go(0), 400);
+
+
+const menuBtn = document.getElementById('menuBtn');
+function setMenu(open) {
+  nav.classList.toggle('open', open);
+  document.body.classList.toggle('menu-open', open);
+  menuBtn.textContent = open ? '✕ Fechar' : '☰ Menu';
+  menuBtn.setAttribute('aria-expanded', open);
+}
+menuBtn.onclick = () => setMenu(!nav.classList.contains('open'));
+stage.addEventListener('pointerdown', () => setMenu(false));
+addEventListener('resize', () => { if (innerWidth >= 700) setMenu(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
