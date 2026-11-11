@@ -77,12 +77,14 @@ box( {
 box( {
   w:44, h:36, d:44, x:455, y:FY-126-18, z:95, c:'#ffe3a0', glow:true
 });
-// desk (against front wall z=+500)
+
+// Mesa do computador
 box( {
-  w:340, h:12, d:140, x:-120, y:FY-150, z:425, c:'#a8754a'
+  w:340, h:12, d:120, x:-120, y:FY-150, z:425, c:'#0c0c0c'
 });
-[[-270,355],[30,355],[-270,495],[30,495]].forEach(([x, z])=>box( {
-  w:12, h:150, d:12, x, y:on(150), z:z-70+0, c:'#6d4527'
+
+[[-280,495],[40,495]].forEach(([x, z])=>box( {
+  w:15, h:150, d:102, x, y:on(150), z:z-70+0, c:'#111111'
 }));
 box( {
   w:130, h:84, d:8, x:-120, y:FY-162-42, z:450, ry:180, c:'#1a1a1f', front:'<div class="screen"><p>$ whoami</p><p>guilherme.luz</p><p>estudante_ADS = true</p><p>// aberto a estágio</p></div>', glow:true
@@ -94,7 +96,7 @@ box( {
   w:150, h:6, d:50, x:-120, y:FY-162-3, z:390, c:'#2c2f3a'
 });
 box( {
-  w:30, h:34, d:30, x:-250, y:FY-162-17, z:440, c:'#e8e2d4', round:6
+  w:30, h:34, d:30, x:-200, y:FY-162-17, z:440, c:'#e8e2d4', round:6
 });
 // chair
 box( {
@@ -123,6 +125,7 @@ box( {
 box( {
   w:260, h:150, d:10, x:-470, y:FY-60-75, z:0, ry:90, c:'#101114', glow:true, front:'<div class="tv"><h4>HABILIDADES</h4><span>Python</span><span>JavaScript</span><span>C++</span><span>PHP</span><span>HTML5</span><span>CSS3</span><span>Flask</span><span>SQLite</span><span>Git</span><span>GitHub</span><span>VS Code</span></div>'
 });
+
 // views
 const views=[
  {
@@ -147,16 +150,19 @@ const sc=()=>Math.min(1, innerWidth/1150, innerHeight/760+.25);
 function apply() {
   world.style.transform=`scale(${sc()}) translateZ(${cur.z}px) rotateX(${cur.rx}deg) rotateY(${cur.ry}deg)`
 }
+
 const INFO=[
 `<h2>Experiências</h2><h3>Vendedor — Kopenhagen <small>Aeroporto de Viracopos · Nov/2024 – Atual</small></h3><ul><li>Atendimento ao cliente em ambiente de alto fluxo</li><li>Organização e controle de estoque</li><li>Registro de vendas e indicadores</li><li>Trabalho com metas e resultados</li></ul><h3>Jovem Aprendiz — Samsung Eletrônica / Amazonia LTDA <small>Abr/2022 – Ago/2023</small></h3><ul><li>Organização documental e apoio administrativo</li><li>Digitalização e arquivamento</li><li>Elaboração de planilhas e relatórios</li></ul>`,
 `<h2>Hobbies</h2><ul><li>Entender como os computadores funcionam: hardware, imagens, cores e sons</li><li>Projetos pessoais: StockFlow (controle de estoque) e um agente de IA para o ENEM</li><li>Estudar programação com cursos e praticar no GitHub</li></ul>`,
 `<h2>Sobre mim</h2><p>Estudante de Análise e Desenvolvimento de Sistemas na UNIMETROCAMP Wyden, com conhecimentos em Python, JavaScript, HTML5, CSS3 e Flask. Experiência em atendimento, estoque e rotinas administrativas. Perfil organizado, proativo e orientado a resultados.</p><h3>Contato</h3><ul><li>Campinas – SP</li><li><a href="mailto:guilherme3luz@outlook.com">guilherme3luz@outlook.com</a></li><li>19-99283-5421</li><li><a href="https://github.com/Devsantosz" target="_blank" rel="noopener">github.com/Devsantosz</a></li></ul>`,
 `<h2>Habilidades</h2><ul><li><b>Linguagens:</b> Python, JavaScript, C++, PHP</li><li><b>Front-end:</b> HTML5, CSS3</li><li><b>Back-end:</b> Flask</li><li><b>Banco de dados:</b> SQLite</li><li><b>Ferramentas:</b> Git, GitHub, VS Code</li><li><b>Idiomas:</b> Português (nativo), Inglês básico (leitura técnica)</li></ul>`,
 `<h2>Guilherme Luz</h2><p><b>Objetivo:</b> estágio ou posição júnior em Desenvolvimento Web / Programação.</p><h3>Formação <small>ADS · UNIMETROCAMP Wyden · Ago/2026 – Dez/2028 (previsão)</small></h3><ul><li>Ensino Médio completo — E.E. Professor Luiz Gonzaga da Costa (2023)</li></ul><h3>Cursos</h3><ul><li>Curso em Vídeo: Algoritmos e Lógica (40h), HTML5 e CSS3 (200h), JavaScript (40h), Git e GitHub (20h)</li><li>Fundação Bradesco: Python (53h)</li></ul><p>Use os botões abaixo para explorar o quarto.</p>`];
+
 const nav=document.getElementById('nav'),cap=document.getElementById('cap');
 views.forEach((v, i)=> {
   const b=document.createElement('button'); b.textContent=v.n; b.onclick=()=>go(i); nav.appendChild(b)
 });
+
 function go(i) {
   setMenu(false);
   idx=(i+views.length)%views.length;
